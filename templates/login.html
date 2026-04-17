@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(120deg, #0f172a, #1e293b);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial;
+        }
+
+        .login-card {
+            width: 350px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        input {
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+    <h3 class="text-center">Admin Login</h3>
+
+    <form method="post">
+        <input class="form-control" name="email" placeholder="Email">
+        <input class="form-control" name="password" type="password" placeholder="Password">
+
+        <button class="btn btn-primary">Login</button>
+    </form>
+</div>
+
+</body>
+</html>
